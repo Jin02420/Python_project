@@ -1,0 +1,59 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Orders</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <header class="navbar">
+        <div class="logo">FoodiePlace</div>
+        <nav>
+            <ul>
+                <li><a href="{{ url_for('auth.login') }}">Login</a></li>
+                <li><a href="{{ url_for('auth.register') }}">Register</a></li>
+                <li><a href="{{ url_for('grocery.grocery_list') }}">Grocery</a></li>
+                <li><a href="{{ url_for('myaccount.view_profile') }}">My Account</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="search-section">
+            <h1>Find Restaurants and Food</h1>
+            <form action="{{ url_for('search.results') }}" method="GET" class="search-form">
+                <input type="text" name="query" placeholder="Search for restaurants or food..." required>
+                <button type="submit">Search</button>
+            </form>
+        </section>
+
+        <section class="categories">
+            <h2>Popular Categories</h2>
+            <div class="category-grid">
+                <div class="category-item">
+                    <img src="{{ url_for('static', filename='images/pizza.jpg') }}" alt="Pizza">
+                    <p>Pizza</p>
+                </div>
+                <div class="category-item">
+                    <img src="{{ url_for('static', filename='images/burgers.jpg') }}" alt="Burgers">
+                    <p>Burgers</p>
+                </div>
+                <div class="category-item">
+                    <img src="{{ url_for('static', filename='images/sushi.jpg') }}" alt="Sushi">
+                    <p>Sushi</p>
+                </div>
+                <div class="category-item">
+                    <img src="{{ url_for('static', filename='images/salads.jpg') }}" alt="Salads">
+                    <p>Salads</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 FoodiePlace. All rights reserved.</p>
+    </footer>
+</body>
+</html>

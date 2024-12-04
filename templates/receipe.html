@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Recipe Suggestions</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h1>Recipe Suggestions</h1>
+    <form action="{{ url_for('get_recipe') }}" method="POST">
+        <label for="ingredients">Enter Ingredients:</label>
+        <input type="text" id="ingredients" name="ingredients" placeholder="e.g., tomato, pasta, cheese">
+        <button type="submit">Get Recipes</button>
+    </form>
+
+    {% if recipes %}
+        <h2>Suggested Recipes:</h2>
+        <ul>
+            {% for recipe in recipes %}
+                <li>{{ recipe.name }}: {{ recipe.description }}</li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No recipes to display. Enter ingredients to get suggestions.</p>
+    {% endif %}
+</body>
+</html>

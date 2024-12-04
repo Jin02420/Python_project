@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}Place Order{% endblock %}
+{% block content %}
+<h1>Place a New Order</h1>
+<form method="post">
+    <label for="order_date">Order Date:</label>
+    <input type="date" name="order_date" id="order_date" required>
+    <label for="total_price">Total Price:</label>
+    <input type="number" name="total_price" id="total_price" required>
+    <label for="status">Order Status:</label>
+    <select name="status" id="status">
+        <option value="Pending">Pending</option>
+        <option value="Completed">Completed</option>
+        <option value="Cancelled">Cancelled</option>
+    </select>
+    <button type="submit">Place Order</button>
+</form>
+{% endblock %}

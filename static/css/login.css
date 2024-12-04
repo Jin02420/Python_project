@@ -1,0 +1,90 @@
+/* Global Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+    background-image: url('https://images.unsplash.com/photo-1589330272907-e73f277b3da1'); /* Sample food image URL */
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    flex-direction: column;
+    color: rgb(246, 4, 4);
+    overflow: hidden;
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 2.5rem;
+    text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5);
+}
+
+form {
+    background: rgba(0, 0, 0, 0.7); /* Darkened background for form */
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.5);
+    width: 320px;
+    transition: all 0.3s ease;
+}
+
+form:hover {
+    box-shadow: 0px 15px 40px rgba(0, 0, 0, 0.7);
+}
+
+
+input[type="email"],
+input[type="password"] {
+    width: 100%;
+    padding: 12px;
+    margin: 12px 0;
+    border: none;
+    border-radius: 8px;
+    background-color: #f00606;
+    color: rgb(18, 17, 17);
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+input[type="email"]:focus,
+input[type="password"]:focus {
+    outline: none;
+    background-color: #444;
+    border: 2px solid #2575fc;
+}
+
+button[type="submit"] {
+    width: 100%;
+    padding: 14px;
+    background-color: #2575fc;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+button[type="submit"]:hover {
+    background-color: #6a11cb;
+    transform: scale(1.05);
+}
+
+p {
+    text-align: center;
+    margin-top: 15px;
+    font-size: 1.1rem;
+}
+
+a {
+    color: #0e46a6;
+    text-decoration: none;
+    font-weight: b
+}
