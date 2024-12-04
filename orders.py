@@ -8,9 +8,7 @@ orders_bp = Blueprint('orders', __name__, template_folder='templates')
 @orders_bp.route('/', methods=['GET'])
 def order_main():
     """Main orders page."""
-    if 'user_id' not in session:
-        flash('Please log in to access this page.', 'warning')
-        return redirect(url_for('auth.login'))
+  
     return render_template('order_main.html')
 
 @orders_bp.route('/', methods=['GET'])

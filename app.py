@@ -45,13 +45,13 @@ app.register_blueprint(cart_bp, url_prefix='/cart')
 def home():
     return redirect(url_for('orders.order_main'))
 
-@app.route('/orders')
-def order_main():
-    """Main orders page."""
-    if 'user_id' not in session:
-        flash('Please log in to access this page.', 'warning')
-        return redirect(url_for('auth.login'))
-    return render_template('orders.order_main.html', user_id=session.get('user_id'))
+# @app.route('/orders')
+# def order_main():
+#     """Main orders page."""
+#     if 'user_id' not in session:
+#         flash('Please log in to access this page.', 'warning')
+#         return redirect(url_for('auth.login'))
+#     return render_template('orders.order_main.html', user_id=session.get('user_id'))
 
 if __name__ == '__main__':
     app.run(debug=True)
