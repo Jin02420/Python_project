@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}Track Order{% endblock %}
+{% block content %}
+<h1>Track Your Order #{{ order.id }}</h1>
+<p>Status: {{ order.status }}</p>
+<h2>Items in your order</h2>
+<ul>
+    {% for item in order_items %}
+    <li>{{ item.item_id }} - Quantity: {{ item.quantity }}</li>
+    {% endfor %}
+</ul>
+{% endblock %}

@@ -1,59 +1,56 @@
+{% extends "base.html" %}
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Orders</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-</head>
-<body>
-    <header class="navbar">
-        <div class="logo">FoodiePlace</div>
-        <nav>
-            <ul>
-                <li><a href="{{ url_for('auth.login') }}">Login</a></li>
-                <li><a href="{{ url_for('auth.register') }}">Register</a></li>
-                <li><a href="{{ url_for('grocery.grocery_list') }}">Grocery</a></li>
-                <li><a href="{{ url_for('myaccount.view_profile') }}">My Account</a></li>
-            </ul>
-        </nav>
-    </header>
+{% block title %}Order Food{% endblock %}
 
-    <main>
-        <section class="search-section">
-            <h1>Find Restaurants and Food</h1>
-            <form action="{{ url_for('search.results') }}" method="GET" class="search-form">
-                <input type="text" name="query" placeholder="Search for restaurants or food..." required>
-                <button type="submit">Search</button>
-            </form>
-        </section>
+{% block content %}
+<div class="order-main-container">
+    <!-- Welcome Section for Logged-in Users -->
+    <div class="welcome-section">
+        {% if 'user_id' not in session %}
+            <h1>Welcome to FoodiePlace! Please <a href="{{ url_for('auth.login') }}">Login here</a> or <a href="{{ url_for('auth.register') }}">register</a> to place an order.</h1>
+        {% else %}
+            <h1>Welcome, {{ session['user_id'] }}! Ready to place an order?</h1>
+        {% endif %}
+    </div>
 
-        <section class="categories">
-            <h2>Popular Categories</h2>
-            <div class="category-grid">
-                <div class="category-item">
-                    <img src="{{ url_for('static', filename='images/pizza.jpg') }}" alt="Pizza">
-                    <p>Pizza</p>
+    <!-- Featured Items Section -->
+    <div class="featured-items">
+        <h2>Featured Menu Items</h2>
+        <div class="items-grid">
+            <!-- Loop through menu items here -->
+            {% for item in menu_items %}
+                <div class="item-card">
+                    <img src="{{ url_for('static', filename='images/' + item.image) }}" alt="{{ item.name }}">
+                    <h3>{{ item.name }}</h3>
+                    <p>{{ item.description }}</p>
+                    <p><strong>${{ item.price }}</strong></p>
+                    <a href="{{ url_for('orders.add_order', item_id=item.id) }}" class="btn btn-primary">Add to Cart</a>
                 </div>
-                <div class="category-item">
-                    <img src="{{ url_for('static', filename='images/burgers.jpg') }}" alt="Burgers">
-                    <p>Burgers</p>
-                </div>
-                <div class="category-item">
-                    <img src="{{ url_for('static', filename='images/sushi.jpg') }}" alt="Sushi">
-                    <p>Sushi</p>
-                </div>
-                <div class="category-item">
-                    <img src="{{ url_for('static', filename='images/salads.jpg') }}" alt="Salads">
-                    <p>Salads</p>
-                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Categories Section (Optional) -->
+    <div class="categories">
+        <h2>Browse by Categories</h2>
+        <div class="category-grid">
+            <div class="category-item">
+                <img src="{{ url_for('static', filename='images/pizza.jpg') }}" alt="Pizza">
+                <p>Pizza</p>
             </div>
-        </section>
-    </main>
-
-    <footer>
-        <p>&copy; 2024 FoodiePlace. All rights reserved.</p>
-    </footer>
-</body>
-</html>
+            <div class="category-item">
+                <img src="{{ url_for('static', filename='images/burger.jpg') }}" alt="Burgers">
+                <p>Burgers</p>
+            </div>
+            <div class="category-item">
+                <img src="{{ url_for('static', filename='images/sushi.jpg') }}" alt="Sushi">
+                <p>Sushi</p>
+            </div>
+            <div class="category-item">
+                <img src="{{ url_for('static', filename='images/salad.jpg') }}" alt="Salads">
+                <p>Salads</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

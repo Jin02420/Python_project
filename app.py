@@ -1,10 +1,10 @@
 
-from flask import Flask,  redirect, url_for,session,flash,render_template
+from flask import Flask,  redirect, url_for,session,render_template
 
 
 
 from auth import auth_bp
-from grocery import grocery_bp
+# from grocery import grocery_bp
 from recipes import recipes_bp
 from orders import orders_bp
 from config import Config
@@ -31,7 +31,7 @@ except Exception as e:
 
 # Register blueprints
 app.register_blueprint(auth_bp, url_prefix='/auth')
-app.register_blueprint(grocery_bp, url_prefix='/grocery')
+# app.register_blueprint(grocery_bp, url_prefix='/grocery')
 app.register_blueprint(recipes_bp, url_prefix='/recipes')
 app.register_blueprint(orders_bp, url_prefix='/orders')
 app.register_blueprint(admin_bp, url_prefix='/admin')
@@ -40,18 +40,19 @@ app.register_blueprint(profile_bp, url_prefix='/myaccount')
 app.register_blueprint(cart_bp, url_prefix='/cart')
 
 
-# Default Route
 @app.route('/')
 def home():
     return redirect(url_for('orders.order_main'))
 
-# @app.route('/orders')
-# def order_main():
-#     """Main orders page."""
-#     if 'user_id' not in session:
-#         flash('Please log in to access this page.', 'warning')
-#         return redirect(url_for('auth.login'))
-#     return render_template('orders.order_main.html', user_id=session.get('user_id'))
+@app.route('/orders')
+def order_main():
+    """Main orders page."""
+    print(f"Session user_id: {session.get('user_id')}")
+    return render_template('orders.order_main.html', user_id=session.get('user_id'))
+
+
 
 if __name__ == '__main__':
     app.run(debug=True)
+
+

@@ -12,9 +12,9 @@
         <nav>
             <ul>
                 <li><a href="{{ url_for('home') }}">Home</a></li>
-                <li><a href="{{ url_for('grocery.grocery') }}">Grocery</a></li>
+         
                 <li><a href="{{ url_for('recipes.recipes') }}">Recipes</a></li>
-                <li><a href="{{ url_for('orders.orders') }}">Orders</a></li>
+                <li><a href="{{ url_for('orders.order_main') }}">Orders</a></li>
                 {% if 'user_id' in session %}
                     <li><a href="{{ url_for('auth.logout') }}">Logout</a></li>
                 {% else %}

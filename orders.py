@@ -1,113 +1,121 @@
-from flask import Blueprint, render_template, request, redirect, url_for, flash, session
+from flask import Blueprint, render_template, request, redirect, url_for, session, flash
 from db import get_db_connection
-
-orders_bp = Blueprint('orders', __name__, template_folder='templates')
 
 orders_bp = Blueprint('orders', __name__, template_folder='templates')
 
 @orders_bp.route('/', methods=['GET'])
 def order_main():
-    """Main orders page."""
-  
+    # """Main orders page."""
+    # if 'user_id' not in session:
+    #     flash('Please log in or register to place an order.', 'warning')
+    #     return redirect(url_for('auth.login'))
+
+    # Fetch menu items from the database
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM MenuItems")
+    menu_items = cursor.fetchall()
+    conn.close()
+    print(menu_items)
     return render_template('order_main.html')
 
-@orders_bp.route('/', methods=['GET'])
-def orders():
-    """Display all orders for the logged-in user."""
+
+@orders_bp.route('/menu', methods=['GET'])
+def view_menu():
+    """View the menu page with items."""
     if 'user_id' not in session:
-        flash('Please log in to view your orders.', 'warning')
+        flash('Please log in to view the menu.', 'warning')
         return redirect(url_for('auth.login'))
-    
+
+    # Fetch menu items from the database
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM MenuItems")
+    menu_items = cursor.fetchall()
+    conn.close()
+
+    return render_template('menu.html', menu_items=menu_items)
+
+@orders_bp.route('/add_to_cart/<int:item_id>', methods=['POST'])
+def add_to_cart(item_id):
+    """Add items to the cart."""
+    if 'user_id' not in session:
+        flash('You need to be logged in to add items to the cart.', 'warning')
+        return redirect(url_for('auth.login'))
+
+    # Get the quantity from the form
+    quantity = int(request.form['quantity'])
+
+    # Add item to the session cart
+    if 'cart' not in session:
+        session['cart'] = {}
+
+    if item_id in session['cart']:
+        session['cart'][item_id] += quantity
+    else:
+        session['cart'][item_id] = quantity
+
+    session.modified = True
+    flash('Item added to cart!', 'success')
+    return redirect(url_for('orders.view_cart'))
+
+@orders_bp.route('/cart', methods=['GET'])
+def view_cart():
+    """View the user's cart."""
+    if 'user_id' not in session:
+        flash('You need to be logged in to view the cart.', 'warning')
+        return redirect(url_for('auth.login'))
+
+    if 'cart' not in session or len(session['cart']) == 0:
+        flash('Your cart is empty!', 'warning')
+        return redirect(url_for('orders.order_main'))
+
+    # Fetch cart items from the database
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cart_items = []
+    for item_id, quantity in session['cart'].items():
+        cursor.execute("SELECT * FROM MenuItems WHERE id=?", (item_id,))
+        item = cursor.fetchone()
+        cart_items.append({'item': item, 'quantity': quantity})
+    conn.close()
+
+    return render_template('cart.html', cart_items=cart_items)
+
+@orders_bp.route('/place_order', methods=['POST'])
+def place_order():
+    """Place the order."""
+    if 'user_id' not in session:
+        flash('You need to be logged in to place an order.', 'warning')
+        return redirect(url_for('auth.login'))
+
+    # Place order logic
     user_id = session['user_id']
     conn = get_db_connection()
     cursor = conn.cursor()
-    cursor.execute("SELECT * FROM Orders WHERE user_id = ?", (user_id,))
-    user_orders = cursor.fetchall()
+
+    total_price = 0
+    for item_id, quantity in session['cart'].items():
+        cursor.execute("SELECT price FROM MenuItems WHERE id=?", (item_id,))
+        item = cursor.fetchone()
+        total_price += item['price'] * quantity
+
+    cursor.execute(
+        "INSERT INTO Orders (user_id, total_price, status) VALUES (?, ?, ?)",
+        (user_id, total_price, 'Pending')
+    )
+    conn.commit()
+    order_id = cursor.lastrowid
+
+    # Add order items
+    for item_id, quantity in session['cart'].items():
+        cursor.execute(
+            "INSERT INTO OrderItems (order_id, item_id, quantity) VALUES (?, ?, ?)",
+            (order_id, item_id, quantity)
+        )
+    conn.commit()
+    session.pop('cart', None)  # Clear the cart after placing the order
     conn.close()
-    
-    return render_template('orders.html', title="Orders", orders=user_orders)
 
-@orders_bp.route('/add', methods=['GET', 'POST'])
-def add_order():
-    """Add a new order."""
-    if 'user_id' not in session:
-        flash('Please log in to place an order.', 'warning')
-        return redirect(url_for('auth.login'))
-
-    if request.method == 'POST':
-        user_id = session['user_id']
-        order_date = request.form['order_date']
-        total_price = request.form['total_price']
-        status = request.form['status']
-
-        conn = get_db_connection()
-        cursor = conn.cursor()
-        try:
-            cursor.execute(
-                "INSERT INTO Orders (user_id, order_date, total_price, status) VALUES (?, ?, ?, ?)",
-                (user_id, order_date, total_price, status)
-            )
-            conn.commit()
-            flash('Order placed successfully!', 'success')
-            return redirect(url_for('orders.orders'))
-        except Exception as e:
-            flash(f"An error occurred: {str(e)}", 'danger')
-        finally:
-            conn.close()
-
-    return render_template('add_order.html', title="Place Order")
-
-@orders_bp.route('/edit/<int:order_id>', methods=['GET', 'POST'])
-def edit_order(order_id):
-    """Edit an existing order."""
-    if 'user_id' not in session:
-        flash('Please log in to edit orders.', 'warning')
-        return redirect(url_for('auth.login'))
-
-    conn = get_db_connection()
-    cursor = conn.cursor()
-    cursor.execute("SELECT * FROM Orders WHERE order_id = ?", (order_id,))
-    order = cursor.fetchone()
-
-    if not order:
-        flash('Order not found.', 'danger')
-        return redirect(url_for('orders.orders'))
-
-    if request.method == 'POST':
-        total_price = request.form['total_price']
-        status = request.form['status']
-        try:
-            cursor.execute(
-                "UPDATE Orders SET total_price = ?, status = ? WHERE order_id = ?",
-                (total_price, status, order_id)
-            )
-            conn.commit()
-            flash('Order updated successfully!', 'success')
-            return redirect(url_for('orders.orders'))
-        except Exception as e:
-            flash(f"An error occurred: {str(e)}", 'danger')
-        finally:
-            conn.close()
-
-    conn.close()
-    return render_template('edit_order.html', title="Edit Order", order=order)
-
-@orders_bp.route('/delete/<int:order_id>', methods=['POST'])
-def delete_order(order_id):
-    """Delete an order."""
-    if 'user_id' not in session:
-        flash('Please log in to delete orders.', 'warning')
-        return redirect(url_for('auth.login'))
-
-    conn = get_db_connection()
-    cursor = conn.cursor()
-    try:
-        cursor.execute("DELETE FROM Orders WHERE order_id = ?", (order_id,))
-        conn.commit()
-        flash('Order deleted successfully!', 'success')
-    except Exception as e:
-        flash(f"An error occurred: {str(e)}", 'danger')
-    finally:
-        conn.close()
-
-    return redirect(url_for('orders.order_main'))
+    flash('Your order has been placed successfully!', 'success')
+    return redirect(url_for('orders.view_cart'))

@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}Place Order{% endblock %}
+{% block content %}
+<h1>Place a New Order</h1>
+
+<form method="POST">
+    <div class="menu-items">
+        {% for item in menu_items %}
+        <div class="menu-item">
+            <h3>{{ item.name }}</h3>
+            <p>{{ item.description }}</p>
+            <p>${{ item.price }}</p>
+            <input type="number" name="quantity" min="1" value="1" required>
+            <input type="hidden" name="item_id" value="{{ item.id }}">
+            <button type="submit">Add to Cart</button>
+        </div>
+        {% endfor %}
+    </div>
+</form>
+
+{% if session.cart %}
+    <h2>Your Cart</h2>
+    <ul>
+        {% for cart_item in session.cart %}
+        <li>Item ID: {{ cart_item.item_id }} Quantity: {{ cart_item.quantity }}</li>
+        {% endfor %}
+    </ul>
+    <form action="{{ url_for('orders.checkout') }}" method="POST">
+        <button type="submit">Proceed to Checkout</button>
+    </form>
+{% endif %}
+{% endblock %}
