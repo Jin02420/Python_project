@@ -26,9 +26,10 @@ def login():
         elif check_password_hash(user[1], password):  # Verify password
             session['user_id'] = user[0]
             flash('Login successful!', 'success')
-            return redirect(url_for('orders.order_main'))  # Redirect to the orders page
+            return redirect(url_for('order_main'))  # Redirect to the orders page
         else:
             flash('Invalid email or password.', 'danger')
+            
     return render_template('login.html', title='Login')
 
 

@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2>Checkout</h2>
+    <form method="POST" action="{{ url_for('orders.checkout') }}">
+        
+        <!-- Delivery Address -->
+        <div class="form-group">
+            <label for="address">Address</label>
+            <input type="text" id="address" name="address" class="form-control" required>
+        </div>
+
+        <!-- User's Email -->
+        <div class="form-group">
+            <label for="email">Email</label>
+           
+            <input type="email" id="email" name="email" class="form-control" value="{{ session['email'] }}" disabled required>
+        </div>
+
+        <!-- Delivery Instructions -->
+        <div class="form-group">
+            <label for="delivery_instructions">Delivery Instructions</label>
+            <textarea id="delivery_instructions" name="delivery_instructions" class="form-control" placeholder="Provide any specific instructions for delivery."></textarea>
+        </div>
+
+        <!-- Location Selection -->
+        <div class="form-group">
+            <label for="location">Choose Delivery Location on Map</label>
+            <div id="map" style="height: 400px; width: 100%;"></div>
+            <input type="hidden" id="latitude" name="latitude">
+            <input type="hidden" id="longitude" name="longitude">
+        </div>
+
+        <!-- Submit Button -->
+        <button type="submit" class="btn btn-primary">Proceed to Checkout</button>
+    </form>
+</div>
+
+<!-- Google Maps API Integration -->
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyClWQ6TinuF6gqU1AaHT-H73Mbkw1Ia_Z0&callback=initMap" async defer></script>
+
+<script>
+    let map;
+    let marker;
+
+    function initMap() {
+        // Default map center, it can be changed based on your needs
+        const defaultLocation = { lat: 43.6532, lng: -79.3832 };  // Example: Toronto, Canada
+
+        map = new google.maps.Map(document.getElementById("map"), {
+            center: defaultLocation,
+            zoom: 15,
+        });
+
+        // Add marker at the center
+        marker = new google.maps.Marker({
+            map: map,
+            draggable: true,
+            position: defaultLocation,
+        });
+
+        // Update the hidden latitude and longitude when the marker is dragged
+        google.maps.event.addListener(marker, 'dragend', function() {
+            const position = marker.getPosition();
+            document.getElementById('latitude').value = position.lat();
+            document.getElementById('longitude').value = position.lng();
+        });
+    }
+    
+    // Initialize the map
+    initMap();
+</script>
+{% endblock %}

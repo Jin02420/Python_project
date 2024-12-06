@@ -1,12 +1,22 @@
-{% extends "base.html" %}
-{% block title %}Track Order{% endblock %}
+{% extends 'layout.html' %}
+
 {% block content %}
-<h1>Track Your Order #{{ order.id }}</h1>
-<p>Status: {{ order.status }}</p>
-<h2>Items in your order</h2>
-<ul>
-    {% for item in order_items %}
-    <li>{{ item.item_id }} - Quantity: {{ item.quantity }}</li>
-    {% endfor %}
-</ul>
-{% endblock %}
+<div class="container mt-5">
+    <h2>Track Your Order</h2>
+
+    <form method="POST" action="{{ url_for('orders.track_order') }}">
+        <div class="mb-3">
+            <label for="order_id" class="form-label">Enter Your Order ID</label>
+            <input type="text" class="form-control" id="order_id" name="order_id" required>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Track Order</button>
+    </form>
+
+    {% if order %}
+    <div class="mt-4">
+        <h4>Order Details:</h4>
+        <p>Order ID: {{ order.id }}</p>
+        <p>Status: {{ status }}</p>
+    </div>
+    {% endblock %}
