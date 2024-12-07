@@ -71,6 +71,12 @@ def send_email():
     msg.body = "Thank you for your order. Your order is being processed!"
     msg.html = "<h1>Thank you for your order!</h1><p>Your order is being processed.</p>"
 
+# Route to send a test email
+@app.route('/send_email')
+def send_email():
+    msg = Message("Your Order Confirmation", recipients=["user_email@example.com"])
+    msg.body = "Thank you for your order. Your order is being processed!"
+    msg.html = "<h1>Thank you for your order!</h1><p>Your order is being processed.</p>"
 
     try:
         mail.send(msg)
