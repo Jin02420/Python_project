@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block title %}Order Confirmation{% endblock %}
+
+{% block content %}
+<div class="confirmation container mt-5">
+    <div class="text-center">
+        <h1 class="text-success">Thank you for your order!</h1>
+        <p>Your order has been successfully placed.</p>
+    </div>
+
+    <div class="order-details">
+        <p><strong>Order ID:</strong> {{ order_id }}</p>
+        <p><strong>Total Amount:</strong> ${{ total_amount }}</p>
+        <p><strong>Delivery Instructions:</strong> {{ delivery_instructions }}</p>
+    </div>
+
+    <div class="text-center">
+        <p>If you have any questions, feel free to contact us.</p>
+        <p>Thank you for shopping with us!</p>
+        <a href="{{ url_for('orders.menu') }}" class="btn btn-primary">Go to Home</a>
+    </div>
+</div>
+{% endblock %}

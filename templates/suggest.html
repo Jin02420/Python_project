@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2>Chat with GPT</h2>
+
+    <!-- Chat Form -->
+    <form method="POST" action="{{ url_for('orders.gpt') }}">
+        <div class="form-group">
+            <label for="user_input">Ask a question</label>
+            <input type="text" id="user_input" name="user_input" class="form-control" placeholder="Ask anything..." required>
+        </div>
+        <button type="submit" class="btn btn-primary">Ask</button>
+    </form>
+
+    <!-- Display Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="alert alert-danger mt-3">
+                {% for category, message in messages %}
+                    <p>{{ message }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
+    <!-- Display the response from GPT -->
+    {% if response %}
+        <div class="mt-4">
+            <h4>Response from GPT:</h4>
+            <p>{{ response }}</p>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

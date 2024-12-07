@@ -1,23 +1,42 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Shopping Cart</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-</head>
-<body>
-    <h1>Your Shopping Cart</h1>
+{% extends "base.html" %}
 
-    {% if cart_items %}
-        <ul>
-            {% for item in cart_items %}
-                <li>{{ item.name }} - Quantity: {{ item.quantity }} - Price: ${{ item.price }}</li>
+{% block title %}Your Cart{% endblock %}
+
+{% block content %}
+<div class="cart-container">
+    <h2>Your Cart</h2>
+    {% if cart %}
+    <table class="cart-table">
+        <thead>
+            <tr>
+                <th>Item</th>
+                <th>Quantity</th>
+                <th>Price</th>
+                <th>Total</th>
+                <th>Remove</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item_id, item in cart.items() %}
+            <tr>
+                <td>{{ item['name'] }}</td>
+                <td>{{ item['quantity'] }}</td>
+                <td>${{ item['price'] }}</td>
+                <td>${{ item['price'] * item['quantity'] }}</td>
+                <td>
+                    <a href="{{ url_for('orders.remove_item', item_id=item_id) }}" class="btn btn-danger">Remove</a>
+                </td>
+                <td></td>
+            </tr>
             {% endfor %}
-        </ul>
-        <h3>Total: ${{ total_price }}</h3>
-        <button onclick="location.href='{{ url_for('checkout') }}'">Proceed to Checkout</button>
+        </tbody>
+    </table>
+    <div class="cart-total">
+        <h3>Total: ${{ total }}</h3>
+        <a href="{{ url_for('orders.checkout') }}" class="btn btn-primary">Proceed to Checkout</a>
+    </div>
     {% else %}
-        <p>Your cart is empty.</p>
+    <p>Your cart is empty.</p>
     {% endif %}
-</body>
-</html>
+</div>
+{% endblock %}

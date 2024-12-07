@@ -1,0 +1,46 @@
+/* responsive.css */
+@media only screen and (max-width: 768px) {
+    .menu-items {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .menu-item img {
+        height: 150px;
+    }
+
+    .cart-table th,
+    .cart-table td {
+        font-size: 14px;
+    }
+
+    .cart-total {
+        font-size: 18px;
+    }
+
+    .search-form input[type="text"] {
+        width: 80%;
+    }
+}
+
+@media only screen and (max-width: 480px) {
+    .menu-items {
+        grid-template-columns: 1fr;
+    }
+
+    .menu-item img {
+        height: 120px;
+    }
+
+    .menu-item h3 {
+        font-size: 16px;
+    }
+
+    .cart-table th,
+    .cart-table td {
+        font-size: 12px;
+    }
+
+    .cart-total h3 {
+        font-size: 16px;
+    }
+}

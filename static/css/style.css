@@ -135,8 +135,11 @@ main {
 /* Footer */
 footer {
     text-align: center;
-    padding: 15px 0;
     background-color: #333;
     color: white;
     margin-top: 30px;
+}
+
+footer p{
+    margin-bottom: 0px !important;
 }

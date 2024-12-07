@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <!-- Welcome Section -->
+        <div class="col-12 text-center mb-4">
+            <h2>Welcome to Your Food Ordering Dashboard, {{ user_name }}!</h2>
+            <p class="lead">Select an option below to proceed with your order.</p>
+        </div>
+
+        <!-- Dashboard Actions -->
+        <div class="col-md-8">
+            <div class="row d-flex justify-content-center">
+                <!-- View Menu Button -->
+                <div class="col-sm-4 mb-3">
+                    <a href="{{ url_for('orders.menu') }}" class="btn btn-lg btn-success w-100">
+                        <i class="fas fa-utensils"></i> View Menu
+                    </a>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Special Promotions Section -->
+        <div class="col-12 mt-2" style="margin-top: 34px;">
+            <div class="alert alert-success text-center">
+                <h4>🎉 Explore Our Delicious Menu!</h4>
+                <p>Treat yourself to a variety of mouthwatering dishes, freshly prepared just for you. Discover new favorites and enjoy a delightful dining experience today!</p>
+            </div>
+        </div>
+
+        <!-- Featured Dishes Section -->
+        <div class="col-12 mt-4">
+            <h3 class="text-center mb-4">Featured Dishes</h3>
+            <div class="row">
+                <!-- Dish 1 -->
+                <div class="col-md-4 mb-3">
+                    <div class="card">
+                        <img src="{{ url_for('static', filename='images/dish1.jpg') }}" class="card-img-top" alt="Dish 1">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">Delicious Pizza</h5>
+                            <p class="card-text">Enjoy our freshly baked pizza with a variety of toppings.</p>
+                            <a href="{{ url_for('orders.menu') }}" class="btn btn-primary w-100">Order Now</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Dish 2 -->
+                <div class="col-md-4 mb-3">
+                    <div class="card">
+                        <img src="{{ url_for('static', filename='images/dish2.jpg') }}" class="card-img-top" alt="Dish 2">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">Tasty Burger</h5>
+                            <p class="card-text">Our juicy burgers are made with the freshest ingredients.</p>
+                            <a href="{{ url_for('orders.menu') }}" class="btn btn-primary w-100">Order Now</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Dish 3 -->
+                <div class="col-md-4 mb-3">
+                    <div class="card">
+                        <img src="{{ url_for('static', filename='images/dish3.jpg') }}" class="card-img-top" alt="Dish 3">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">Healthy Salad</h5>
+                            <p class="card-text">A fresh and healthy option for your meal. Packed with nutrients!</p>
+                            <a href="{{ url_for('orders.menu') }}" class="btn btn-primary w-100">Order Now</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+       
+    </div>
+</div>
+
+{% endblock %}

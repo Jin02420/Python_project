@@ -3,36 +3,89 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}My Web App{% endblock %}</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <title>{% block title %}Food Ordering{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/menu_item.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/cart.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/orders.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/responsive.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/buttons.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+
+
+    {% block extra_head %}{% endblock %}
 </head>
 <body>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+
+    <script>
+        {% if get_flashed_messages() %}
+            toastr.success("{{ get_flashed_messages()[0] }}");
+        {% endif %}
+    </script>
+
+    <!-- Header Section -->
     <header>
-        <nav>
-            <ul>
-                <li><a href="{{ url_for('home') }}">Home</a></li>
-         
-                <li><a href="{{ url_for('recipes.recipes') }}">Recipes</a></li>
-                <li><a href="{{ url_for('orders.order_main') }}">Orders</a></li>
-                {% if 'user_id' in session %}
-                    <li><a href="{{ url_for('auth.logout') }}">Logout</a></li>
-                {% else %}
-                    <li><a href="{{ url_for('auth.login') }}">Login</a></li>
-                    <li><a href="{{ url_for('auth.register') }}">Register</a></li>
-                {% endif %}
-            </ul>
-        </nav>
+        <div class="container header-container">
+            <div class="logo">
+                <a href="{{ url_for('order_main') }}">
+                    <h1>FoodiePlace</h1>
+                </a>
+            </div>
+
+            <!-- Navigation Bar -->
+            <nav>
+                <ul>
+                    {% if 'user_id' in session %}
+                        <li><a href="{{ url_for('orders.gpt') }}">Suggest</a></li>
+                        <li><a href="{{ url_for('orders.menu') }}">Menu</a></li>
+                        <li><a href="{{ url_for('orders.cart') }}">Cart</a></li>
+                        <li><a href="{{ url_for('auth.logout') }}">Logout</a></li>
+                    {% else %}
+                        <li><a href="{{ url_for('auth.login') }}">Login</a></li>
+                        <li><a href="{{ url_for('auth.register') }}">Register</a></li>
+                    {% endif %}
+                </ul>
+            </nav>
+        </div>
     </header>
-    
+
+    <div class="notification" id="notification">
+        {{ get_flashed_messages()[0] }}
+    </div>
+
+    <!-- Main Content Section -->
     <main>
-        {% block content %}
-        <!-- Page-specific content goes here -->
-        {% endblock %}
+        <div class="container">
+            {% block content %}
+            <!-- Content will be injected here from child templates -->
+            {% endblock %}
+        </div>
     </main>
-    
+
+    <!-- Footer Section -->
     <footer>
-        <p>&copy; 2024 My Web App. All rights reserved.</p>
+        <div class="container footer-container">
+            <p>&copy; 2024 FoodiePlace. All rights reserved.</p>
+        </div>
     </footer>
+
+    <script>
+        // Check if there is a flashed message
+        {% if get_flashed_messages() %}
+            // Show notification if present
+            var notification = document.getElementById('notification');
+            notification.style.display = "block";
+
+            // Hide after 3 seconds
+            setTimeout(function() {
+                notification.style.display = "none";
+            }, 3000);  // 3000 milliseconds = 3 seconds
+        {% endif %}
+    </script>
+
 </body>
 </html>

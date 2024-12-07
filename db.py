@@ -5,7 +5,7 @@ DATABASE_CONFIG = {
     'server': 'LAPTOP-JN4FC3RI',
     'database': 'FoodCartDB',
     'driver': '{ODBC Driver 17 for SQL Server}',
-    'trusted_connection': "yes"  # Adjust if needed
+    'trusted_connection': 'yes'  # Adjust if needed
 }
 
 def get_db_connection():
@@ -64,11 +64,51 @@ def init_db():
         conn.close()
     else:
         print("Database connection failed.")
-        
-def fetch_groceries_by_store(store):
-    """Fetch groceries for a specific store."""
-    query = "SELECT id, name, quantity, category FROM grocery_items WHERE store = ?"
-    return fetch_data(query, (store,))
 
+# Fetch all menu items from the database
+def fetch_menu_items():
+    """Fetch menu items for displaying in the menu."""
+    query = "SELECT item_id, name, price FROM Menu_Items"
+    return fetch_data(query)
 
+# Fetch an individual menu item by ID
+def fetch_menu_item_by_id(item_id):
+    """Fetch a specific menu item by its ID."""
+    query = "SELECT item_id, name, price FROM Menu_Items WHERE item_id = ?"
+    return fetch_data(query, (item_id,))
 
+# Create a new order and return the order ID
+def create_order(total_amount):
+    """Create a new order and return the order ID."""
+    query = "INSERT INTO Orders (total_amount) VALUES (?)"
+    success = execute_query(query, (total_amount,))
+    if success:
+        # Get the last inserted order ID (to add items to Order_Items)
+        query = "SELECT SCOPE_IDENTITY()"
+        result = fetch_data(query)
+        return result[0][0] if result else None
+    return None
+
+# Add items to the Order_Items table
+def add_order_items(order_id, cart):
+    """Insert order items into the Order_Items table."""
+    for item_id, item in cart.items():
+        query = """
+        INSERT INTO Order_Items (order_id, item_name, quantity, price) 
+        VALUES (?, ?, ?, ?)
+        """
+        success = execute_query(query, (order_id, item['name'], item['quantity'], item['price']))
+        if not success:
+            print(f"Failed to insert order item {item['name']}")
+            return False
+    return True
+
+# Fetch the cart items for the checkout process
+def fetch_cart_items(cart):
+    """Fetch the details of items in the cart from the database."""
+    cart_items = []
+    for item_id, item_data in cart.items():
+        item = fetch_menu_item_by_id(item_id)
+        if item:
+            cart_items.append(item[0])
+    return cart_items
