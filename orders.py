@@ -58,25 +58,41 @@ def order_main():
 def gpt():
     response = None
     if request.method == 'POST':
-        user_input = request.form['user_input']
-        
+        # Get selected ingredients, preference, and extra info
+        ingredients = request.form.getlist('ingredients')  # Retrieve selected ingredients
+        extra_info = request.form['extra_info'].strip()  # Retrieve additional user input
+        veg_nonveg = request.form['veg_nonveg']  # Retrieve veg/non-veg preference
+
+        # Combine ingredients
+        selected_ingredients = ', '.join(ingredients)
+
+        # Create the prompt for GPT
+        prompt = (f"I have this list of ingredients: {selected_ingredients}. You can add more ingredients to make a dish. "
+                  f"I am {veg_nonveg.lower()}. Suggest me a dish, give me the recipe, and also list other ingredients "
+                  f"I'll need to make it. Show the list of additional ingredients in capital letters.")
+
+        # Append extra information if provided
+        if extra_info:
+            prompt += f" Additionally, {extra_info}"
+
         try:
-            # Correct OpenAI API call to use ChatGPT-4
+            # Call OpenAI API with the generated prompt
             completion = client.chat.completions.create(
                 model="gpt-3.5-turbo",
                 messages=[
                     {"role": "system", "content": "You are a helpful assistant."},
-                    {"role": "user", "content": user_input}
+                    {"role": "user", "content": prompt}
                 ]
             )
-            # Extracting the assistant's response from the completion object
-            response =completion.choices[0].message.content
-        
+            # Extract the assistant's response
+            response = completion.choices[0].message.content
+
         except Exception as e:
             flash(f"Error: {str(e)}", 'danger')
             response = "There was an error with the API request."
         
     return render_template('suggest.html', response=response)
+
 
 # Route to display the main dashboard page
 @orders_bp.route('/orders', methods=['GET', 'POST'])

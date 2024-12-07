@@ -2,15 +2,49 @@
 
 {% block content %}
 <div class="container mt-5">
-    <h2>Chat with GPT</h2>
+    <h2>Dish Suggestion with GPT</h2>
 
     <!-- Chat Form -->
     <form method="POST" action="{{ url_for('orders.gpt') }}">
+        <!-- Ingredient Selection -->
         <div class="form-group">
-            <label for="user_input">Ask a question</label>
-            <input type="text" id="user_input" name="user_input" class="form-control" placeholder="Ask anything..." required>
+            <label for="ingredients">Select Ingredients:</label>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="ingredients" value="Tomatoes" id="ingredient-tomatoes">
+                <label class="form-check-label" for="ingredient-tomatoes">Tomatoes</label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="ingredients" value="Cucumber" id="ingredient-cucumber">
+                <label class="form-check-label" for="ingredient-cucumber">Cucumber</label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="ingredients" value="Onions" id="ingredient-onions">
+                <label class="form-check-label" for="ingredient-onions">Onions</label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="ingredients" value="Potatoes" id="ingredient-potatoes">
+                <label class="form-check-label" for="ingredient-potatoes">Potatoes</label>
+            </div>
+            <!-- Add more ingredients as needed -->
         </div>
-        <button type="submit" class="btn btn-primary">Ask</button>
+
+        <!-- Additional Information -->
+        <div class="form-group mt-3">
+            <label for="extra_info">Additional Information (optional):</label>
+            <textarea id="extra_info" name="extra_info" class="form-control" placeholder="Enter additional instructions or preferences"></textarea>
+        </div>
+
+        <!-- Veg/Non-Veg Option -->
+        <div class="form-group mt-3">
+            <label for="veg_nonveg">Select Preference:</label>
+            <select class="form-control" id="veg_nonveg" name="veg_nonveg" required>
+                <option value="Vegetarian">Vegetarian</option>
+                <option value="Non-Vegetarian">Non-Vegetarian</option>
+            </select>
+        </div>
+
+        <!-- Submit Button -->
+        <button type="submit" class="btn btn-primary mt-3">Get Suggestion</button>
     </form>
 
     <!-- Display Flash Messages -->
