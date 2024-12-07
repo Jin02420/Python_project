@@ -40,7 +40,8 @@
             <nav>
                 <ul>
                     {% if 'user_id' in session %}
-                        <li><a href="{{ url_for('orders.gpt') }}">Suggest</a></li>
+                        <li><a href="{{ url_for('orders.gpt') }}">Suggest Eecipe</a></li>
+                        <li><a href="{{ url_for('orders.grocery') }}">Grocery</a></li>
                         <li><a href="{{ url_for('orders.menu') }}">Menu</a></li>
                         <li><a href="{{ url_for('orders.cart') }}">Cart</a></li>
                         <li><a href="{{ url_for('auth.logout') }}">Logout</a></li>

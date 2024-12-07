@@ -101,16 +101,36 @@ def menu():
 
     if query:
         # If query exists, search for menu items matching the query
-        cursor.execute("SELECT menu_item_id, name, description, price, image, category FROM menu_items WHERE name LIKE ?", ('%' + query + '%',))
+        cursor.execute("SELECT menu_item_id, name, description, price, image, category FROM menu_items WHERE type = 'menu' AND name LIKE ?", ('%' + query + '%',))
     else:
         # If no query, fetch all menu items
-        cursor.execute("SELECT menu_item_id, name, description, price, image, category FROM menu_items")
+        cursor.execute("SELECT menu_item_id, name, description, price, image, category FROM menu_items WHERE type = 'menu'")
+
 
     menu_items = cursor.fetchall()  # Fetch the results
     conn.close()
 
     # Render the template with the menu items and query (if any)
-    return render_template('menu_item.html', menu_items=menu_items, query=query)
+    return render_template('menu_item.html', menu_items=menu_items, query=query, type='menu')
+
+@orders_bp.route('/grocery', methods=['GET'])
+def grocery():
+    query = request.args.get('query')  # Get the search query from URL if any
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    if query:
+        # If query exists, search for menu items matching the query
+        cursor.execute("SELECT menu_item_id, name, description, price, image, category FROM menu_items WHERE type = 'grocery' AND name LIKE ?", ('%' + query + '%',))
+    else:
+        # If no query, fetch all menu items
+        cursor.execute("SELECT menu_item_id, name, description, price, image, category FROM menu_items WHERE type = 'grocery'")
+
+    menu_items = cursor.fetchall()  # Fetch the results
+    conn.close()
+
+    # Render the template with the menu items and query (if any)
+    return render_template('menu_item.html', menu_items=menu_items, query=query, type="grocery")
 
 
 @orders_bp.route('/add_to_cart/<int:item_id>', methods=['GET', 'POST'])

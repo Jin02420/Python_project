@@ -1,15 +1,32 @@
 {% extends "base.html" %}
 
-{% block title %}Menu Items{% endblock %}
+{% block title %}
+    {% if menu_type == 'menu' %}
+        Menu Items
+    {% elif menu_type == 'grocery' %}
+        Grocery Items
+    {% else %}
+        Items
+    {% endif %}
+{% endblock %}
 
 {% block content %}
 <div class="menu-container">
-    <h2>Menu</h2>
+    <h2>
+        {% if type == 'menu' %}
+            Menu
+        {% elif type == 'grocery' %}
+            Grocery
+        {% else %}
+            Items
+        {% endif %}
+    </h2>
 
-    <form method="GET" action="{{ url_for('orders.menu') }}" class="search-form">
-        <input type="text" name="query" placeholder="Search menu items...">
+    <form method="GET" action="{% if type == 'grocery' %}{{ url_for('orders.grocery') }}{% else %}{{ url_for('orders.menu') }}{% endif %}" class="search-form">
+        <input type="text" name="query" placeholder="Search items...">
         <button type="submit">Search</button>
     </form>
+    
 
     <div class="menu-items">
         {% for item in menu_items %}

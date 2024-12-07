@@ -64,12 +64,6 @@ def order_main():
         return redirect(url_for('auth.login'))  # Redirect to login if not logged in
     return redirect(url_for('orders.order_main'))  # Redirect to the menu page if logged in
 
-# Route to send a test email
-@app.route('/send_email')
-def send_email():
-    msg = Message("Your Order Confirmation", recipients=["user_email@example.com"])
-    msg.body = "Thank you for your order. Your order is being processed!"
-    msg.html = "<h1>Thank you for your order!</h1><p>Your order is being processed.</p>"
 
 # Route to send a test email
 @app.route('/send_email')
